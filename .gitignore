@@ -1,0 +1,49 @@
+# Compiled class files & build artifacts
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Log files
+*.log
+logs/
+*.out
+
+# Crash logs & JVM dumps
+hs_err_pid*
+replay_pid*
+
+# Operating System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+
+# Temporary files & caches
+*.tmp
+*.bak
+*.swp
+*~
+.m2/

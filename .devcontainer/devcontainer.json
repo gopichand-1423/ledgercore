@@ -1,0 +1,65 @@
+{
+  "name": "LedgerCore (Java 24 / Spring Boot)",
+  "image": "maven:3.9-eclipse-temurin-24",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest",
+      "enableMoby": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-spring-boot",
+        "vmware.vscode-boot-dev-pack",
+        "vscjava.vscode-spring-initializr",
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml",
+        "ms-azuretools.vscode-docker",
+        "humao.rest-client"
+      ],
+      "settings": {
+        "java.configuration.runtimes": [
+          {
+            "name": "JavaSE-24",
+            "path": "/opt/java/openjdk",
+            "default": true
+          }
+        ],
+        "java.compile.nullAnalysis.mode": "automatic",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "files.eol": "\n",
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "forwardPorts": [
+    8080,
+    5432,
+    6379,
+    9092
+  ],
+  "portsAttributes": {
+    "8080": {
+      "label": "LedgerCore Application",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL Database",
+      "onAutoForward": "silent"
+    },
+    "6379": {
+      "label": "Redis Cache & Locks",
+      "onAutoForward": "silent"
+    },
+    "9092": {
+      "label": "Apache Kafka KRaft",
+      "onAutoForward": "silent"
+    }
+  },
+  "remoteUser": "root",
+  "postCreateCommand": "mvn -version"
+}
