@@ -332,6 +332,7 @@ class ConcurrencyStressIT {
         int drainSafetyCount = 0;
         while (!outboxRepository.findUnpublishedForUpdate(50).isEmpty() && drainSafetyCount < 50) {
             outboxRelay.relayUnpublishedEvents();
+            Thread.sleep(50);
             drainSafetyCount++;
         }
 

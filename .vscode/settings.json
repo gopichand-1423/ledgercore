@@ -1,4 +1,13 @@
 {
-  "java.configuration.updateBuildConfiguration": "interactive",
-  "spring-boot.ls.problem.version-validation.BOOT_VERSION_VALIDATION_CODE": "IGNORE"
+  "spring-boot.ls.problem": {
+    "version-validation": {
+      "BOOT_VERSION_VALIDATION_CODE": "IGNORE",
+      "UNSUPPORTED_OSS_VERSION": "IGNORE",
+      "UPDATE_LATEST_PATCH_VERSION": "IGNORE",
+      "UPDATE_LATEST_MINOR_VERSION": "IGNORE",
+      "UPDATE_LATEST_MAJOR_VERSION": "IGNORE"
+    }
+  },
+  "spring-boot.ls.problem.version-validation.BOOT_VERSION_VALIDATION_CODE": "IGNORE",
+  "spring-boot.ls.problem.version-validation.UNSUPPORTED_OSS_VERSION": "IGNORE"
 }
