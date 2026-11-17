@@ -3,7 +3,6 @@ package com.gopichand.ledgercore.transfer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gopichand.ledgercore.account.AccountRepository;
 import com.gopichand.ledgercore.domain.exception.InsufficientFundsException;
-import com.gopichand.ledgercore.domain.exception.InvalidTransferException;
 import com.gopichand.ledgercore.domain.model.Account;
 import com.gopichand.ledgercore.domain.model.AccountStatus;
 import com.gopichand.ledgercore.domain.model.AccountType;
@@ -21,7 +20,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

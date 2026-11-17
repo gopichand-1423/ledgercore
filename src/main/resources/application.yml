@@ -77,24 +77,3 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
-
-# Resilience4j Circuit Breaker Configuration
-resilience4j:
-  circuitbreaker:
-    configs:
-      default:
-        sliding-window-type: COUNT_BASED
-        sliding-window-size: 50
-        minimum-number-of-calls: 20
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10s
-        permitted-number-of-calls-in-half-open-state: 10
-        automatic-transition-from-open-to-half-open-enabled: true
-    instances:
-      clearingEngine:
-        base-config: default
-      payoutGateway:
-        base-config: default
-        sliding-window-size: 20
-        minimum-number-of-calls: 10
-        permitted-number-of-calls-in-half-open-state: 5

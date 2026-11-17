@@ -45,6 +45,7 @@ public class TransferController {
         // 2. Check PostgreSQL journal_entries: return cached 201 Created if match, or throw 409 Conflict if mismatch
         Optional<TransferResponse> cachedResponse = idempotencyService.checkExistingEntry(trimmedKey, payloadHash);
         if (cachedResponse.isPresent()) {
+            log.info("Returning cached idempotent response for key: {}", trimmedKey);
             return ResponseEntity.status(HttpStatus.CREATED).body(cachedResponse.get());
         }
 
@@ -54,6 +55,7 @@ public class TransferController {
         try {
             // 4. Execute atomic transfer within ACID transaction
             TransferResponse response = transferService.executeTransfer(trimmedKey, payloadHash, request);
+            log.info("Transfer completed successfully for entryId: {}, key: {}", response.entryId(), trimmedKey);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } finally {
             // 5. Release processing lock upon completion
@@ -63,6 +65,7 @@ public class TransferController {
 
     @PostMapping("/{entryId}/reverse")
     public ResponseEntity<TransferResponse> reverseTransfer(@PathVariable UUID entryId) {
+        log.info("Received reversal request for entry: {}", entryId);
         TransferResponse response = transferService.executeReversal(entryId);
         return ResponseEntity.ok(response);
     }
