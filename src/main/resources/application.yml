@@ -2,7 +2,7 @@ spring:
   application:
     name: ledgercore
 
-  # Java 24 Virtual Threads
+  # Java 21 Virtual Threads
   threads:
     virtual:
       enabled: true
@@ -27,7 +27,7 @@ spring:
     redis:
       host: ${SPRING_DATA_REDIS_HOST:redis}
       port: ${SPRING_DATA_REDIS_PORT:6379}
-      timeout: 2000ms
+      timeout: 2s
       lettuce:
         pool:
           max-active: 20
@@ -64,36 +64,37 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: "health,info,metrics,prometheus"
   endpoint:
     health:
       show-details: always
     prometheus:
       enabled: true
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
+  metrics:
     tags:
       application: ${spring.application.name}
 
-# Resilience4j Circuit Breaker & Rate Limiter Configuration
+# Resilience4j Circuit Breaker Configuration
 resilience4j:
   circuitbreaker:
-    instances:
-      clearingEngine:
+    configs:
+      default:
         sliding-window-type: COUNT_BASED
         sliding-window-size: 50
         minimum-number-of-calls: 20
         failure-rate-threshold: 50
-        wait-duration-in-open-state: 10000ms
+        wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 10
         automatic-transition-from-open-to-half-open-enabled: true
+    instances:
+      clearingEngine:
+        base-config: default
       payoutGateway:
-        sliding-window-type: COUNT_BASED
+        base-config: default
         sliding-window-size: 20
         minimum-number-of-calls: 10
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10000ms
         permitted-number-of-calls-in-half-open-state: 5
-        automatic-transition-from-open-to-half-open-enabled: true

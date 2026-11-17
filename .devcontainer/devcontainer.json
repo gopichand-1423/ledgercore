@@ -1,6 +1,6 @@
 {
-  "name": "LedgerCore (Java 24 / Spring Boot)",
-  "image": "maven:3.9-eclipse-temurin-24",
+  "name": "LedgerCore (Java 21 / Spring Boot)",
+  "image": "maven:3.9-eclipse-temurin-21",
   "features": {
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
       "version": "latest",
@@ -22,7 +22,7 @@
       "settings": {
         "java.configuration.runtimes": [
           {
-            "name": "JavaSE-24",
+            "name": "JavaSE-21",
             "path": "/opt/java/openjdk",
             "default": true
           }

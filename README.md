@@ -1,7 +1,7 @@
 # LedgerCore ⚡
 ### Enterprise High-Throughput Double-Entry Payment & Clearing Engine
-[![Java 24](https://img.shields.io/badge/Java-24-orange.svg?logo=openjdk)](https://openjdk.org/projects/jdk/24/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-brightgreen.svg?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Java 21](https://img.shields.io/badge/Java-21-orange.svg?logo=openjdk)](https://openjdk.org/projects/jdk/21/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.3-brightgreen.svg?logo=springboot)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg?logo=postgresql)](https://www.postgresql.org/)
 [![Kafka](https://img.shields.io/badge/Apache%20Kafka-3.9%20KRaft-black.svg?logo=apachekafka)](https://kafka.apache.org/)
 [![Redis](https://img.shields.io/badge/Redis-7-red.svg?logo=redis)](https://redis.io/)
@@ -18,7 +18,7 @@ In mission-critical fintech, banking, and payment infrastructure, **balance disc
 3. **Dual-Write Inconsistencies**: Updating an in-memory or database balance while publishing an event to a message broker in an uncoordinated manner inevitably drops events or publishes phantom state during network partitions.
 
 ### The LedgerCore Solution
-**LedgerCore** is a real-time Double-Entry Payment & Clearing Engine designed for high-concurrency cloud environments. Built on **Java 24 (Virtual Threads)** and containerized infrastructure, it mathematically guarantees the fundamental equation of accounting:
+**LedgerCore** is a real-time Double-Entry Payment & Clearing Engine designed for high-concurrency cloud environments. Built on **Java 21 (Virtual Threads)** and containerized infrastructure, it mathematically guarantees the fundamental equation of accounting:
 
 $$\Delta \text{Assets} + \Delta \text{Expenses} \equiv \Delta \text{Liabilities} + \Delta \text{Equity} + \Delta \text{Revenue}$$
 
@@ -41,7 +41,7 @@ flowchart TD
         Gateway["Reverse Proxy / API Gateway"]
     end
 
-    subgraph CoreApp["LedgerCore Engine (Java 24 Virtual Threads)"]
+    subgraph CoreApp["LedgerCore Engine (Java 21 Virtual Threads)"]
         IdempService["Idempotency Service<br/>(SHA-256 + Redis SET NX)"]
         TransferEngine["Double-Entry Transfer Engine<br/>(Lexicographical Row Locking)"]
         HoldEngine["Two-Phase Hold Engine<br/>(Authorize, Capture, Void)"]
@@ -146,7 +146,7 @@ sequenceDiagram
 
 | Architectural Feature | Implementation & Technical Mechanism | Benefit |
 |---|---|---|
-| **Java 24 Virtual Threads** | `spring.threads.virtual.enabled: true` with Generational ZGC. Executes I/O-heavy operations (database queries, Kafka publishes, external HTTP calls) on millions of lightweight user-mode fibers without thread starvation. | Sub-50ms latency under massive thread concurrency with negligible RAM footprint. |
+| **Java 21 Virtual Threads** | `spring.threads.virtual.enabled: true` with Generational ZGC. Executes I/O-heavy operations (database queries, Kafka publishes, external HTTP calls) on millions of lightweight user-mode fibers without thread starvation. | Sub-50ms latency under massive thread concurrency with negligible RAM footprint. |
 | **PostgreSQL Constraint Trigger** | `trg_verify_double_entry` declared as `DEFERRABLE INITIALLY DEFERRED`. Evaluated at `COMMIT` time to verify that $\sum(\text{DEBIT}) \equiv \sum(\text{CREDIT})$ for each `entry_id`. | Guarantees balanced books at the database engine level; prevents unallocated funds even if application bugs occur. |
 | **Deadlock-Free Row Locking** | Deterministic lexicographical sorting: `Stream.of(sourceId, destId).sorted().toList()`, followed by `SELECT * FROM accounts WHERE id = :id FOR UPDATE`. | Eliminates circular wait conditions. Proven by 200 concurrent bidirectional stress threads yielding **zero deadlocks**. |
 | **Transactional Outbox & Inbox** | Atomically inserts domain events into `outbox_events` inside the primary business transaction. A background worker polls with `FOR UPDATE SKIP LOCKED` and publishes to Kafka. Settlement consumers deduplicate with `inbox_processed_events`. | Eliminates dual-write vulnerabilities. Delivers guaranteed at-least-once streaming with exactly-once end processing. |
@@ -163,7 +163,7 @@ The engine is benchmarked using an integration test suite located at **[src/test
 
 ### Benchmark Scenario
 - Two accounts (`Account A` and `Account B`) seeded with `10,000,000` paise each (**`20,000,000` paise total**).
-- **500 concurrent Java 24 Virtual Threads** unleashed simultaneously:
+- **500 concurrent Java 21 Virtual Threads** unleashed simultaneously:
   1. **200 Bidirectional Transfers** ($A \rightarrow B$ and $B \rightarrow A$ concurrently) to stress deadlock avoidance.
   2. **150 Duplicate Retry Bursts** (15 distinct transaction keys blasted 10 times concurrently) to verify race-condition idempotency deduplication.
   3. **150 Overdraw Transfers** ($50,000,000$ paise requested) to verify balance invariant protections.
@@ -206,7 +206,7 @@ You will observe all 4 services healthy:
 - `ledgercore-postgres` (PostgreSQL 16 on port `5432`)
 - `ledgercore-redis` (Redis 7 on port `6379`)
 - `ledgercore-kafka` (Apache Kafka 3.9 KRaft on port `9092`)
-- `ledgercore-app-builder` (Maven 3.9 + Temurin Java 24 container)
+- `ledgercore-app-builder` (Maven 3.9 + Temurin Java 21 container)
 
 ### 2. Compile & Run Tests inside Container
 ```bash
