@@ -13,4 +13,7 @@ public record TransferResponse(
     String reference,
     Instant postedAt
 ) {
+    public UUID entryId() {
+        return journalEntryId;
+    }
 }

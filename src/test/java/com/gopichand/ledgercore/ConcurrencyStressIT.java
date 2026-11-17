@@ -48,13 +48,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
+@SuppressWarnings({"resource", "deprecation"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 @TestPropertySource(properties = {
         "spring.datasource.hikari.maximum-pool-size=50",
         "spring.datasource.hikari.connection-timeout=30000"
 })
-public class ConcurrencyStressIT {
+class ConcurrencyStressIT {
 
     private static final Logger log = LoggerFactory.getLogger(ConcurrencyStressIT.class);
 

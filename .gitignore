@@ -11,7 +11,8 @@ target/
 
 # IDE & Editor files
 .idea/
-.vscode/
+.vscode/*
+!.vscode/settings.json
 *.iml
 *.iws
 *.ipr
